@@ -12,6 +12,10 @@ export default class PostCard extends React.Component {
           <Icon style={styles.icon} size={18} name="question"/>
           <Text style={styles.type}>{this.props.type}</Text>
         </View>
+        <View style={styles.row}>
+          <Icon style={styles.icon} size={18} name="home"/>
+          <Text style={styles.type}>{this.props.location}</Text>
+        </View>
         <View style={{
            borderBottomColor: 'black', 
            borderBottomWidth: 0.5,
@@ -39,7 +43,6 @@ export default class PostCard extends React.Component {
 const styles = StyleSheet.create({
     card: {
         padding: 15,
-        fontFamily: 'Roboto',
         margin: 5,
         borderRadius: 5,
         borderColor: 'black',
@@ -58,15 +61,18 @@ const styles = StyleSheet.create({
     title: {
       color: '#4c8ef7',
       fontSize: 18,
+      fontFamily: 'Roboto',
       paddingBottom: 5
     },
     titleWant: {
       color: '#ef3f0e',
+      fontFamily: 'Roboto',
       fontSize: 18,
       paddingBottom: 5
     },
     type: {
       fontSize: 16,
+      fontFamily: 'Roboto',
       paddingBottom: 5,
     },
 });

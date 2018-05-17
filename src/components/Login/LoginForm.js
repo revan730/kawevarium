@@ -1,14 +1,52 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity, 
-  StyleSheet, Alert, AsyncStorage } from 'react-native';
+  StyleSheet, Alert, AsyncStorage, ToastAndroid } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import axios from 'axios';
 
-export default class Login extends Component {
+import backend  from '../../config/Backend';
+
+
+export default class LoginForm extends Component {
+  constructor(props){
+    super(props)
+
+    this.state = {
+      email: 'revan730@icloud.com',
+      password: 'asdfgh123'
+    }
+  }
+
+  onLoginButtonPress = async () => {
+    // Login routine
+    console.log('data: ', this.state);
+    if (!this.state.email || !this.state.password) {
+      ToastAndroid.show('Missing email or password', ToastAndroid.SHORT);
+      return;
+    }
+    try {
+      const response = await axios.post(backend.loginUrl, {
+        email: this.state.email,
+        password: this.state.password
+      });
+      const token = response.data.token;
+      console.log('token:', token);
+      await AsyncStorage.setItem('@LocalStorage:apiToken', token);
+      Actions.home({ token });
+    } catch (err) {
+      if (err.response.status === 400) {
+        ToastAndroid.show('Wrong email or password', ToastAndroid.SHORT);
+      }
+      console.log('something went wrong on login: ', err.response);
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <TextInput style = {styles.input} 
-                       autoCapitalize="none" 
+                       autoCapitalize="none"
+                       onChangeText={value => this.setState({email: value.trim()})}
                        onSubmitEditing={() => this.passwordInput.focus()} 
                        autoCorrect={false} 
                        keyboardType='email-address' 
@@ -17,14 +55,15 @@ export default class Login extends Component {
                        placeholderTextColor='rgba(225,225,225,0.7)'/>
 
         <TextInput style = {styles.input}   
-                      returnKeyType="go" 
+                      returnKeyType="go"
+                      onChangeText={value => this.setState({password: value.trim()})}
                       ref={(input)=> this.passwordInput = input} 
                       placeholder='Password' 
                       placeholderTextColor='rgba(225,225,225,0.7)' 
                       secureTextEntry/>
 
         <TouchableOpacity style={styles.buttonContainer} 
-                             onPress={onLoginButtonPress}>
+                             onPress={this.onLoginButtonPress}>
                      <Text  style={styles.buttonText}>LOGIN</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonContainer} 
@@ -35,16 +74,6 @@ export default class Login extends Component {
     );
   }
 }
-
-const onLoginButtonPress = async () => {
-  // Login routine
-  try {
-    await AsyncStorage.setItem('@LocalStorage:apiToken', 'something');
-    Actions.home({ token: 'something' });
-  } catch (err) {
-    console.log('something went wrong on login: ', err);
-  }
-};
 
 const onSignButtonPress = () => {
   Actions.register();
