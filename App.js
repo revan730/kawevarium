@@ -9,6 +9,13 @@ import Main from './src/components/Main/Main';
 import Fabrication from './src/components/Main/Fabrication';
 import Exchange from './src/components/Main/Exchange';
 
+import { createStore, applyMiddleware } from 'redux';
+import { Provider, connect } from 'react-redux';
+import axiosMiddleware from 'redux-axios-middleware';
+import axios from 'axios';
+import reducer from './src/helpers/reducer';
+import backend from './src/config/Backend';
+
 
 class TabIcon extends React.Component {
   render() {
@@ -22,9 +29,17 @@ class TabIcon extends React.Component {
   }
 }
 
+const client = axios.create({
+  baseURL: backend.url,
+  responseType: 'json'
+});
+
+const store = createStore(reducer, applyMiddleware(axiosMiddleware(client)));
+
 export default class App extends React.Component {
   render() {
     return (
+      <Provider store={store}>
       <Router>
         <Scene key="root">
           <Scene key="login" component={Login} initial='true'
@@ -39,6 +54,7 @@ export default class App extends React.Component {
           </Scene>
         </Scene>
       </Router>
+      </Provider>
     );
   }
 }

@@ -11,6 +11,7 @@ export default class Login extends Component {
     this.state = {
       apiToken: '',
       loading: true,
+      email: props.email
     }
 
   }
@@ -46,7 +47,7 @@ export default class Login extends Component {
                  </View>
 
                     <View style={styles.formContainer}>
-                           <LoginForm />
+                           <LoginForm email={this.state.email} />
                     </View>
         </KeyboardAvoidingView>
       );

@@ -2,46 +2,50 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, KeyboardAvoidingView } from 'react-native';
 import PostList from '../Common/PostList';
 import ToolBar from '../Common/ToolBar';
+import { Actions } from 'react-native-router-flux';
+import { listExchanges } from '../../helpers/reducer';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider, connect } from 'react-redux';
+import axiosMiddleware from 'redux-axios-middleware';
+import axios from 'axios';
+import reducer from '../../helpers/reducer';
+import backend from '../../config/Backend';
+import { loadToken } from '../../helpers/token';
 
+class ExchangeScreen extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-const posts = [
-  { type: 'Меняю хавчик на хавчик',
-    lack: 'Дошик с курицей',
-    present: 'Дошик с сыром',
-    tg: '@povar228',
-    phone: '0952281488',
-    name: 'Димасик',
-    location: 'Общага 6' },
-  { type: 'Меняю хавчик на хавчик',
-    lack: 'Дошик с курицей',
-    present: 'Дошик с сыром',
-    tg: '@povar228',
-    phone: '0952281488',
-    name: 'Димасик',
-    location: 'Общага 6' },
-  { type: 'Меняю хавчик на хавчик',
-    lack: 'Дошик с курицей',
-    present: 'Дошик с сыром',
-    tg: '@povar228',
-    phone: '0952281488',
-    name: 'Димасик',
-    location: 'Общага 3' },
-  { type: 'Меняю хавчик на хавчик',
-    lack: 'Дошик с курицей',
-    present: 'Дошик с сыром',
-    tg: '@povar228',
-    phone: '0952281488',
-    name: 'Димасик',
-    location: 'Общага 19' }
-]
+  async componentDidMount() {
+    const token = await loadToken();
+    if (token) {
+      this.props.listExchanges(token);
+    }
+    else Actions.login();
+  }
 
-export default class Login extends Component {
   render() {
+    const { exchanges } = this.props;
+    if (this.props.error) {
+      return (
+        <View>
+          <ToolBar />
+          <Text>{this.props.error}</Text>
+        </View>)
+    }
+    if (this.props.loading) {
+      return (
+        <View>
+          <ToolBar />
+          <Text>Loading</Text>
+        </View>)
+    }
     return (
-      <View>
-        <ToolBar />
-        <PostList posts={posts} />
-      </View>
+        <View>
+          <ToolBar />
+          <PostList posts={exchanges} />
+        </View>
     );
   }
 }
@@ -52,3 +56,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     }
 });
+
+const mapStateToProps = state => {
+  let storedExchanges = state.exchanges.map(ex => ({ key: ex.id, ...ex }));
+  return {
+    exchanges: storedExchanges,
+    loading: state.loading,
+    error: state.error
+  };
+};
+
+const mapDispatchToProps = {
+  listExchanges
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExchangeScreen);

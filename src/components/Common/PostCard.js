@@ -6,7 +6,7 @@ export default class PostCard extends React.Component {
   render() {
     return (
       <View style={styles.card}>
-        <Text style={styles.titleWant}>Хочу: {this.props.lack}</Text>
+        <Text style={styles.titleWant}>Хочу: {this.props.lacks}</Text>
         <Text style={styles.title}>Что есть: {this.props.present}</Text>
         <View style={styles.row}>
           <Icon style={styles.icon} size={18} name="question"/>
@@ -14,7 +14,7 @@ export default class PostCard extends React.Component {
         </View>
         <View style={styles.row}>
           <Icon style={styles.icon} size={18} name="home"/>
-          <Text style={styles.type}>{this.props.location}</Text>
+          <Text style={styles.type}>{this.props.author.location}</Text>
         </View>
         <View style={{
            borderBottomColor: 'black', 
@@ -24,15 +24,15 @@ export default class PostCard extends React.Component {
         <View style={styles.rowContacts}>
           <View style={styles.row}>
             <Icon name="user" style={styles.icon}/>
-            <Text>{this.props.name}</Text>
+            <Text>{this.props.author.name}</Text>
           </View>
           <View style={styles.row}>
             <Icon name="telegram" style={styles.icon}/>
-            <Text>{this.props.tg} </Text>
+            <Text>{this.props.author.telegram} </Text>
           </View>
           <View style={styles.row}>
             <Icon name="phone" style={styles.icon}/>
-            <Text>{this.props.phone}</Text>
+            <Text>{this.props.author.phone}</Text>
           </View>
         </View>
       </View>

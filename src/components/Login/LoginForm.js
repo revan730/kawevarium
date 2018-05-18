@@ -12,14 +12,17 @@ export default class LoginForm extends Component {
     super(props)
 
     this.state = {
-      email: 'revan730@icloud.com',
-      password: 'asdfgh123'
+      email: '',
+      password: ''
+    }
+
+    if (props.email) {
+      this.state.email = props.email;
     }
   }
 
   onLoginButtonPress = async () => {
     // Login routine
-    console.log('data: ', this.state);
     if (!this.state.email || !this.state.password) {
       ToastAndroid.show('Missing email or password', ToastAndroid.SHORT);
       return;
@@ -29,8 +32,8 @@ export default class LoginForm extends Component {
         email: this.state.email,
         password: this.state.password
       });
+
       const token = response.data.token;
-      console.log('token:', token);
       await AsyncStorage.setItem('@LocalStorage:apiToken', token);
       Actions.home({ token });
     } catch (err) {
@@ -46,6 +49,7 @@ export default class LoginForm extends Component {
       <View style={styles.container}>
         <TextInput style = {styles.input} 
                        autoCapitalize="none"
+                       value={this.state.email}
                        onChangeText={value => this.setState({email: value.trim()})}
                        onSubmitEditing={() => this.passwordInput.focus()} 
                        autoCorrect={false} 

@@ -5,6 +5,8 @@ import { StyleSheet, Text, TextInput, View, Image,
 import validate from '../../helpers/validationWrapper';
 import validation from '../../helpers/validation';
 import { Actions } from 'react-native-router-flux';
+import axios from 'axios';
+import backend  from '../../config/Backend';
 
 export default class Register extends Component {
 
@@ -21,19 +23,58 @@ export default class Register extends Component {
       tg: '',
       phone: '',
       location: '',
-      locations: ''
+      locationId: 0,
+      locations: []
     };
   }
 
-  register = () => {
+  loadLocations = async () => {
+    try {
+      const response = await axios.get(backend.locationsUrl);
+      console.log(response.data.results);
+      this.setState({ locations: response.data.results })
+
+    } catch (err) {
+      if (err.response.status === 400) {
+        ToastAndroid.show('Wrong email or password', ToastAndroid.SHORT);
+      }
+      console.log('something went wrong on login: ', err.response);
+    }
+  }
+
+  register = async () => {
     // Register routine
     if (this.state.validError) {
       ToastAndroid.show(this.state.validError, ToastAndroid.SHORT);
     }
 
     // Validation OK
+    try {
+      const response = await axios.post(backend.registerUrl, {
+        email: this.state.email,
+        password: this.state.password,
+        password_confirm: this.state.passwordConf,
+        name: this.state.name,
+        surname: this.state.surname,
+        telegram: this.state.telegram,
+        phone: this.state.phone,
+        location: this.state.locationId
+      });
 
+      Actions.login({email: this.state.email});
+
+    } catch (err) {
+      if (err.response.status === 400) {
+        ToastAndroid.show('Something is wrong, check your data and try again',
+         ToastAndroid.SHORT);
+      }
+      console.log('something went wrong on login: ', err.response);
+    }
   };
+
+  componentDidMount() {
+    this.loadLocations();
+  }
 
   render() {
     return (
@@ -124,9 +165,11 @@ export default class Register extends Component {
                                         placeholderTextColor='rgba(225,225,225,0.7)'/>
 
                           <Picker style={styles.input}
-                            selectedValue={this.state.location}
-                            onValueChange={(value, i) => this.setState({location: value})}>
-                            <Picker.Item label="KPI" value="KPI" />
+                            selectedValue={this.state.locationId}
+                            onValueChange={(value, i) => this.setState({locationId: value})}>
+                            {this.state.locations.map((location, i) => (
+                              <Picker.Item label={location.name} value={location.id}
+                              key={i} />))}
                           </Picker>
 
                           <TouchableOpacity style={styles.buttonContainer} 
