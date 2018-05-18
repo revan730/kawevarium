@@ -61,8 +61,8 @@ const mapStateToProps = state => {
   let storedExchanges = state.exchanges.map(ex => ({ key: ex.id, ...ex }));
   return {
     exchanges: storedExchanges,
-    loading: state.loading,
-    error: state.error
+    loading: state.loadingEx,
+    error: state.errorEx
   };
 };
 

@@ -2,6 +2,15 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, KeyboardAvoidingView } from 'react-native';
 import PostList from '../Common/PostList';
 import ToolBar from '../Common/ToolBar';
+import { Actions } from 'react-native-router-flux';
+import { listFabs } from '../../helpers/reducer';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider, connect } from 'react-redux';
+import axiosMiddleware from 'redux-axios-middleware';
+import axios from 'axios';
+import reducer from '../../helpers/reducer';
+import backend from '../../config/Backend';
+import { loadToken } from '../../helpers/token';
 
 const posts = [
  { type: 'Хочу сделат жрат',
@@ -15,12 +24,43 @@ const posts = [
    } },
 ]
 
-export default class Login extends Component {
+export class FabricationsScreen extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  async componentDidMount() {
+    const token = await loadToken();
+    console.log(token);
+    if (token) {
+      console.log('hii');
+      this.props.listFabs(token);
+    }
+    else {
+      Actions.login();
+    }
+  }
+
   render() {
+    const { fabs } = this.props;
+    if (this.props.error) {
+      return (
+        <View>
+          <ToolBar />
+          <Text>{this.props.error}</Text>
+        </View>)
+    }
+    if (this.props.loading) {
+      return (
+        <View>
+          <ToolBar />
+          <Text>Loading</Text>
+        </View>)
+    }
     return (
       <View>
         <ToolBar />
-        <PostList posts={posts} />
+        <PostList posts={fabs} />
       </View>
     );
   }
@@ -34,3 +74,19 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 });
+
+const mapStateToProps = state => {
+  console.log(state);
+  let storedFabs = state.fabs.map(fab => ({ key: fab.id, ...fab }));
+  return {
+    fabs: storedFabs,
+    loading: state.loadingFabs,
+    error: state.errorFabs
+  };
+};
+
+const mapDispatchToProps = {
+  listFabs
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FabricationsScreen);
