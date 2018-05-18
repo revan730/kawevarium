@@ -18,7 +18,8 @@ export default class ToolBar extends React.Component {
             <Picker.Item value="All" label="Все общаги" />
           </Picker>
           <Text style={styles.addText}
-          onPress={logout}>Добавить</Text>
+          onPress={this.props.type === 'fab' ? Actions.createFabrication : Actions.createExchange}>
+          Добавить</Text>
         </View>
       </View>
       );

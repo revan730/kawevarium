@@ -6,8 +6,8 @@ export default class PostCard extends React.Component {
   render() {
     return (
       <View style={styles.card}>
-        <Text style={styles.titleWant}>Хочу: {this.props.lacks}</Text>
-        <Text style={styles.title}>Что есть: {this.props.present}</Text>
+        <Text style={styles.titleWant}>Чего нет: {this.props.lacks}</Text>
+        <Text style={styles.title}>Что есть (хочу): {this.props.present}</Text>
         <View style={styles.row}>
           <Icon style={styles.icon} size={18} name="question"/>
           <Text style={styles.type}>{this.props.type}</Text>

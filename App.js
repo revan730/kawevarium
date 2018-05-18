@@ -8,6 +8,9 @@ import Register from './src/components/Register/Register';
 import Main from './src/components/Main/Main';
 import Fabrication from './src/components/Main/Fabrication';
 import Exchange from './src/components/Main/Exchange';
+import CreateFabrication from './src/components/CreateFabrication/CreateFabrication';
+import CreateExchange from './src/components/CreateExchange/CreateExchange';
+
 
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
@@ -52,6 +55,10 @@ export default class App extends React.Component {
                <Scene key="exchangeTab" iconName="handshake-o" title="Exchange" hideNavBar icon={TabIcon} component={Exchange}/>
              </Scene>
           </Scene>
+          <Scene key="createFabrication" component={CreateFabrication} 
+          title="Новый пост"/>
+          <Scene key="createExchange" component={CreateExchange} 
+          title="Новый пост"/>
         </Scene>
       </Router>
       </Provider>

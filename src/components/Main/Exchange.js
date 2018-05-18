@@ -20,9 +20,17 @@ class ExchangeScreen extends Component {
   async componentDidMount() {
     const token = await loadToken();
     if (token) {
+      this.setState({token});
       this.props.listExchanges(token);
     }
     else Actions.login();
+  }
+
+  refresh = () => {
+    this.props.listExchanges(this.state.token);
+    if (this.list) {
+      this.list.stopRefresh();
+    }
   }
 
   render() {
@@ -43,8 +51,9 @@ class ExchangeScreen extends Component {
     }
     return (
         <View>
-          <ToolBar />
-          <PostList posts={exchanges} />
+          <ToolBar type="ex" />
+          <PostList ref={component => this.list = component}
+           posts={exchanges} refresh={this.refresh} />
         </View>
     );
   }

@@ -4,7 +4,10 @@ const backendUrls = {
   loginUrl: url + 'login',
   registerUrl: url + 'register',
   locationsUrl: url + 'locations',
-  exchangesUrl: url + 'exchanges/'
+  exchangesUrl: url + 'exchanges/',
+  fabricationsUrl: url + 'fabrications/',
+  fabTypesUrl: url + 'fabrications/types',
+  exTypesUrl: url + 'exchanges/types'
 };
 
 

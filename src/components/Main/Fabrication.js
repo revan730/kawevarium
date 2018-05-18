@@ -31,13 +31,19 @@ export class FabricationsScreen extends Component {
 
   async componentDidMount() {
     const token = await loadToken();
-    console.log(token);
     if (token) {
-      console.log('hii');
+      this.setState({token});
       this.props.listFabs(token);
     }
     else {
       Actions.login();
+    }
+  }
+
+  refresh = () => {
+    this.props.listFabs(this.state.token);
+    if (this.list) {
+      this.list.stopRefresh();
     }
   }
 
@@ -46,21 +52,22 @@ export class FabricationsScreen extends Component {
     if (this.props.error) {
       return (
         <View>
-          <ToolBar />
+          <ToolBar type="fab" />
           <Text>{this.props.error}</Text>
         </View>)
     }
     if (this.props.loading) {
       return (
         <View>
-          <ToolBar />
+          <ToolBar type="fab" />
           <Text>Loading</Text>
         </View>)
     }
     return (
       <View>
-        <ToolBar />
-        <PostList posts={fabs} />
+        <ToolBar type="fab" />
+        <PostList ref={component => this.list = component}
+         posts={fabs} refresh={this.refresh} />
       </View>
     );
   }
@@ -76,7 +83,6 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  console.log(state);
   let storedFabs = state.fabs.map(fab => ({ key: fab.id, ...fab }));
   return {
     fabs: storedFabs,
