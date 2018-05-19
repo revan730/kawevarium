@@ -4,18 +4,40 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Actions } from 'react-native-router-flux';
 
 export default class ToolBar extends React.Component {
-  componentWillMount() {
+  constructor(props){
+    super(props);
+
+    if (this.props.current) {
+      this.state = {
+        location: this.props.current
+      };
+    } else {
+      this.state = {
+        location: -1
+      }
+    }
+  }
+
+  componentDidMount() {
     StatusBar.setBarStyle('dark-content');
+  }
+
+  changeLocation(id) {
+    this.setState({location: id});
+    this.props.select(id);
   }
 
   render() {
     return (
       <View style={styles.bar}>
         <View style={styles.row}>
-          <Picker style={styles.picker} itemStyle={{ height: 20 }}
-            onValueChange={(value, i) => this.setState({location: value})}>
-            <Picker.Item value="Home" label="Моя общага" />
-            <Picker.Item value="All" label="Все общаги" />
+          <Picker selectedValue={this.state.location}
+           style={styles.picker} itemStyle={{ height: 20 }}
+            onValueChange={(value, i) => this.changeLocation(value)}>
+            <Picker.Item label='Все общаги' value={-1} key={0} />
+            {this.props.locs.map((loc, i) => (
+              <Picker.Item label={loc.name} value={loc.id}
+              key={loc.id} />))}
           </Picker>
           <Text style={styles.addText}
           onPress={this.props.type === 'fab' ? Actions.createFabrication : Actions.createExchange}>

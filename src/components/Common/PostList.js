@@ -24,10 +24,19 @@ export default class PostList extends React.Component {
     this.setState({refreshing: false});
   }
 
+  EmptyView = () => {
+    return (
+      <View style={styles.empty}>
+        <Text style={{textAlign: 'center'}}>Ничего нет :(</Text>
+      </View>
+      );
+  }
+
   render() {
     return (
       <FlatList data={this.props.posts} renderItem={this.renderItem}
-      onRefresh={this.props.refresh} refreshing={this.state.refreshing} />
+      onRefresh={this.props.refresh} refreshing={this.state.refreshing}
+      ListEmptyComponent={this.EmptyView} />
       );
   }
 }
@@ -38,5 +47,11 @@ const styles = StyleSheet.create({
         padding: 10,
         justifyContent: 'center',
     },
-
+    empty: {
+        flex: 1,
+        margin: 20,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 });

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, KeyboardAvoidingView } from 'react-nativ
 import PostList from '../Common/PostList';
 import ToolBar from '../Common/ToolBar';
 import { Actions } from 'react-native-router-flux';
-import { listExchanges } from '../../helpers/reducer';
+import { listExchanges, listLocations } from '../../helpers/reducer';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import axiosMiddleware from 'redux-axios-middleware';
@@ -15,6 +15,10 @@ import { loadToken } from '../../helpers/token';
 class ExchangeScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      location: '',
+      token: ''
+    };
   }
 
   async componentDidMount() {
@@ -22,15 +26,23 @@ class ExchangeScreen extends Component {
     if (token) {
       this.setState({token});
       this.props.listExchanges(token);
+      this.props.listLocations(token);
     }
     else Actions.login();
   }
 
   refresh = () => {
-    this.props.listExchanges(this.state.token);
+    this.props.listExchanges(this.state.token, this.state.location);
     if (this.list) {
       this.list.stopRefresh();
     }
+  }
+
+  locationSelect = (id) => {
+    // Reload exchanges with selected location
+    this.setState({location: id});
+
+    this.props.listExchanges(this.state.token, id);
   }
 
   render() {
@@ -38,20 +50,19 @@ class ExchangeScreen extends Component {
     if (this.props.error) {
       return (
         <View>
-          <ToolBar />
           <Text>{this.props.error}</Text>
         </View>)
     }
-    if (this.props.loading) {
+    if (this.props.loading || this.props.loadingLocs) {
       return (
         <View>
-          <ToolBar />
-          <Text>Loading</Text>
+          <Text>Загрузочка...</Text>
         </View>)
     }
     return (
         <View>
-          <ToolBar type="ex" />
+          <ToolBar locs={this.props.locations} type="ex"
+          select={this.locationSelect} current={this.state.location} />
           <PostList ref={component => this.list = component}
            posts={exchanges} refresh={this.refresh} />
         </View>
@@ -68,15 +79,20 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   let storedExchanges = state.exchanges.map(ex => ({ key: ex.id, ...ex }));
+  let storedLocations = state.locations.map(loc => ({key: loc.id, ...loc }));
+
   return {
     exchanges: storedExchanges,
+    locations: storedLocations,
     loading: state.loadingEx,
+    loadingLocs: state.loadingLocs,
     error: state.errorEx
   };
 };
 
 const mapDispatchToProps = {
-  listExchanges
+  listExchanges,
+  listLocations
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExchangeScreen);

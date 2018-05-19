@@ -26,14 +26,14 @@ export default class PostCard extends React.Component {
             <Icon name="user" style={styles.icon}/>
             <Text>{this.props.author.name}</Text>
           </View>
-          <View style={styles.row}>
+          {this.props.author.telegram ? (<View style={styles.row}>
             <Icon name="telegram" style={styles.icon}/>
             <Text>{this.props.author.telegram} </Text>
-          </View>
-          <View style={styles.row}>
+          </View>) : null}
+          {this.props.author.phone ? (<View style={styles.row}>
             <Icon name="phone" style={styles.icon}/>
             <Text>{this.props.author.phone}</Text>
-          </View>
+          </View>) : null}
         </View>
       </View>
       );
