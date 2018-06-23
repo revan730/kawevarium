@@ -20,7 +20,7 @@ export default class Register extends Component {
       passwordConf: '',
       name: '',
       surname: '',
-      tg: '',
+      telegram: '',
       phone: '',
       location: '',
       locationId: 0,
@@ -150,7 +150,7 @@ export default class Register extends Component {
                           <TextInput style = {styles.input}   
                                         returnKeyType="next"
                                         error={this.state.tgError}
-                                        onChangeText={value => this.setState({tg: value.trim()})}
+                                        onChangeText={value => this.setState({telegram: value.trim()})}
                                         ref={(input)=> this.tgInput = input}
                                         onSubmitEditing={() => this.phoneInput.focus()}
                                         placeholder='Telegram username (optional)' 

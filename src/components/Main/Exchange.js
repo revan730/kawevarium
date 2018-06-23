@@ -55,12 +55,12 @@ class ExchangeScreen extends Component {
     }
     if (this.props.loading || this.props.loadingLocs) {
       return (
-        <View>
+        <View style={styles.container}>
           <Text>Загрузочка...</Text>
         </View>)
     }
     return (
-        <View>
+        <View style={{flex: 1, justifyContent: 'center'}}>
           <ToolBar locs={this.props.locations} type="ex"
           select={this.locationSelect} current={this.state.location} />
           <PostList ref={component => this.list = component}
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 

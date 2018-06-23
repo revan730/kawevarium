@@ -39,7 +39,7 @@ export default class ToolBar extends React.Component {
               <Picker.Item label={loc.name} value={loc.id}
               key={loc.id} />))}
           </Picker>
-          <Text style={styles.addText}
+          <Text style={styles.addText} onLongPress={logout}
           onPress={this.props.type === 'fab' ? Actions.createFabrication : Actions.createExchange}>
           Добавить</Text>
         </View>

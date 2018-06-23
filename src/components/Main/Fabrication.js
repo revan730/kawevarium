@@ -62,7 +62,7 @@ export class FabricationsScreen extends Component {
         </View>)
     }
     return (
-      <View>
+      <View style={{flex: 1, justifyContent: 'center'}}>
         <ToolBar type="fab" locs={this.props.locations}
         select={this.locationSelect} current={this.state.location} />
         <PostList ref={component => this.list = component}
